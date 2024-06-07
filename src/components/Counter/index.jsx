@@ -2,23 +2,18 @@ import { connect } from "react-redux"
 
 
 function Counter(props) {
-    const { count, step, dispatch } = props
+    const { count, step, decrementCount, incrementCount, setNewStep} = props
     //Чтобы отрисовать новое состояние через action
     //вызываем dispatch
-    const decCount = () => {
-        const action = { type: 'decrement' }
-        dispatch(action);
-    }
-
-     const incCount = () => {
-       const action = { type: "increment" };
-       dispatch(action);
-     };
+    const decCount = () =>  decrementCount()
+       
     
-    const stepChangeHandler = ({target:{value}}) => {
-        const action = { type: "setStep", value: Number(value) };
-        dispatch(action);
-    }
+
+     const incCount = () =>  incrementCount()
+       
+     
+    
+    const stepChangeHandler = ({target:{value}}) => setNewStep(Number(value))
   return (
     <div>
       Counter: {count}
@@ -36,8 +31,19 @@ const mapStateToProps = (state) => {
     return state;
 }
 
+const mapDispatchToProps = dispatch => {
+  return {
+    incrementCount: () => 
+      dispatch({ type: "increment" }),
+    decrementCount: () => 
+      dispatch({ type: "decrement" }),
+    setNewStep: (value) => dispatch({ type: "setStep", value })
+    
+  }
+}
+
 //Создаём компонент вышего порядка и с помощью него соеденяем стору и елемент, для получения данных через пропс.
 //Функция принимает два параметра, для считывания данных из сторы= промапить
-const withAccsessToStore= connect(mapStateToProps)
+const withAccsessToStore= connect(mapStateToProps, mapDispatchToProps)
 //Оборачиваем елемент в компонент
 export default withAccsessToStore(Counter) 
